@@ -1,7 +1,7 @@
 use advent::*;
 
 fn main() -> Result<(), Error> {
-    let values : Vec<i32> = read_list("day01/input.txt")?;
+    let values: Vec<i32> = read_list("day01/input.txt")?;
 
     for i1 in 0..values.len() {
         for i2 in i1 + 1..values.len() {
