@@ -6,7 +6,7 @@ use advent::*;
 enum Instruction {
     Nop(i64),
     Acc(i64),
-    Jmp(i64)
+    Jmp(i64),
 }
 
 impl AdventParse for Instruction {
@@ -14,9 +14,9 @@ impl AdventParse for Instruction {
         let v = line.split_whitespace().collect::<Vec<_>>();
         match v.as_slice() {
             ["nop", x] => Ok(Instruction::Nop(x.parse()?)),
-            ["acc", x] => Ok(Instruction::Acc(x.parse()? )),
-            ["jmp", x] => Ok(Instruction::Jmp(x.parse()? )),
-            _ => Err(anyhow!("Invalid instruction"))
+            ["acc", x] => Ok(Instruction::Acc(x.parse()?)),
+            ["jmp", x] => Ok(Instruction::Jmp(x.parse()?)),
+            _ => Err(anyhow!("Invalid instruction")),
         }
     }
 }
@@ -32,7 +32,7 @@ impl VirtualMachine {
         VirtualMachine {
             insts,
             pc: 0,
-            acc: 0
+            acc: 0,
         }
     }
 
@@ -40,7 +40,10 @@ impl VirtualMachine {
         //dbg!( self.insts[self.pc as usize]);
         match self.insts[self.pc as usize] {
             Instruction::Nop(_) => self.pc += 1,
-            Instruction::Acc(x) => { self.acc += x; self.pc += 1; },
+            Instruction::Acc(x) => {
+                self.acc += x;
+                self.pc += 1;
+            }
             Instruction::Jmp(x) => self.pc += x,
         }
 
@@ -52,7 +55,7 @@ fn replace_jmp_or_nop(insts: &[Instruction], nth: usize) -> Option<Vec<Instructi
     let replacement = match insts[nth] {
         Instruction::Nop(x) => Some(Instruction::Jmp(x)),
         Instruction::Jmp(x) => Some(Instruction::Nop(x)),
-        _ => None
+        _ => None,
     };
 
     if let Some(replacement) = replacement {
@@ -74,7 +77,7 @@ fn main() -> Result<(), Error> {
         vm.tick()?;
     }
 
-    println!( "Acc: {}", vm.acc);
+    println!("Acc: {}", vm.acc);
 
     let inst_count = insts.len();
     for index in 0..inst_count {
@@ -86,11 +89,10 @@ fn main() -> Result<(), Error> {
             }
 
             if vm.pc == inst_count as i64 {
-                println!( "Acc: {}", vm.acc);
+                println!("Acc: {}", vm.acc);
             }
-        } 
+        }
     }
-    
 
     Ok(())
 }
